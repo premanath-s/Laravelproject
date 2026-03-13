@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +19,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 // Dashboard (login required)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
+
+Route::get('/dashboard', function () {
+
+    $orderCount = \App\Models\Order::where('user_id', auth()->id())->count();
+    $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
+
+    return view('dashboard', compact('orderCount','cartCount'));
+
+})->middleware(['auth'])->name('dashboard');
 
 // Protected routes (login required)
 Route::middleware('auth')->group(function () {
