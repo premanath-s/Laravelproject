@@ -7,6 +7,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,22 +19,26 @@ use App\Http\Controllers\DashboardController;
 // Home route
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 // Dashboard (login required)
-
-
 Route::get('/dashboard', function () {
 
     $orderCount = \App\Models\Order::where('user_id', auth()->id())->count();
     $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
+    $products = \App\Models\Product::latest()->take(6)->get();
 
-    return view('dashboard', compact('orderCount','cartCount'));
+    return view('dashboard', compact('orderCount','cartCount', 'products'));
 
 })->middleware(['auth'])->name('dashboard');
 
 // Protected routes (login required)
 Route::middleware('auth')->group(function () {
+
+    // Payment routes
+    Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/{order}/pay', [PaymentController::class, 'pay'])->name('payment.pay');
+    Route::post('/payment/verify', [PaymentController::class, 'verify'])->name('payment.verify');
 
     /*
     |--------------------------------------------------------------------------
@@ -40,11 +46,8 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 
     /*
     |--------------------------------------------------------------------------
@@ -52,11 +55,9 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/products', [ProductController::class,'index'])->name('products.index');
-
+    Route::get('/products/{id}', [ProductController::class,'show'])->name('products.detail_view');
     Route::get('/products/create', [ProductController::class,'create'])->name('products.create');
-
     Route::post('/products/store', [ProductController::class,'store'])->name('products.store');
-
 
     /*
     |--------------------------------------------------------------------------
@@ -64,44 +65,40 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/cart', [CartController::class,'index'])->name('cart.index');
-
     Route::post('/cart/add/{id}', [CartController::class,'add'])->name('cart.add');
-
     Route::patch('/cart/{id}', [CartController::class,'update'])->name('cart.update');
-
     Route::delete('/cart/{id}', [CartController::class,'remove'])->name('cart.remove');
-
 
     /*
     |--------------------------------------------------------------------------
     | Order routes
     |--------------------------------------------------------------------------
     */
+    // Checkout page (show form)
     Route::get('/checkout', [OrderController::class,'checkout'])->name('checkout');
 
-    Route::get('/orders', [OrderController::class,'history'])->name('orders.history');
+    // Store order (save after checkout)
+    Route::post('/orders/store', [OrderController::class,'store'])->name('orders.store');
 
+    // Order history
+    Route::get('/orders', [OrderController::class,'history'])->name('orders.history');
 
     /*
     |--------------------------------------------------------------------------
-    | Admin routes
+    | Admin routes (Replaced by Filament)
     |--------------------------------------------------------------------------
     */
-    Route::get('/admin/products', [ProductController::class,'index'])->name('admin.products');
-
-    Route::get('/admin/products/create', [ProductController::class,'create'])->name('admin.products.create');
-
-    Route::post('/admin/products/store', [ProductController::class,'store'])->name('admin.products.store');
-    Route::get('/admin/products/{id}/edit', [ProductController::class,'edit'])->name('admin.products.edit');
-    Route::patch('/admin/products/{id}', [ProductController::class,'update'])->name('admin.products.update');
-    Route::delete('/admin/products/{id}', [ProductController::class,'destroy'])->name('admin.products.destroy');
-
-    // Admin activity
-    Route::get('/admin/activity', [AdminController::class,'activity'])->name('admin.activity');
-    Route::get('/admin/users/{id}/orders', [AdminController::class,'userOrders'])->name('admin.users.orders');
+    // Filament handles routes at /admin
+    
+    // GET logout route
+    Route::get('/logout', function () {
+        Auth::guard('web')->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    });
 
 });
-
 
 // Authentication routes
 require __DIR__.'/auth.php';

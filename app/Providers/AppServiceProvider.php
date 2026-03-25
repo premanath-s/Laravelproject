@@ -4,9 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use App\Models\ActivityLog;
+use App\Models\Cart;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Share live cart count with main layout/navbar
+        View::composer('layouts.app', function ($view) {
+            $cartCount = 0;
+
+            if (Auth::check()) {
+                $cartCount = (int) Cart::where('user_id', Auth::id())->sum('quantity');
+            }
+
+            $view->with('cartCount', $cartCount);
+        });
+
         // Listen for login/logout events and record activity
         Event::listen(Login::class, function (Login $event) {
             try {

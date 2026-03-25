@@ -32,16 +32,28 @@
       </div>
 
       <div>
-        <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
-        <div class="mt-2 flex items-center space-x-4">
-          <div class="w-20 h-20 bg-gray-100 rounded overflow-hidden">
-            @if($product->image)
-              <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+        <label for="images" class="block text-sm font-medium text-gray-700">Images</label>
+        <div class="mt-2 flex flex-col space-y-4">
+          @if($product->images || $product->image)
+          <div class="flex flex-wrap gap-4">
+            @if($product->images)
+              @foreach($product->images as $img)
+                <div class="w-24 h-24 bg-gray-100 rounded overflow-hidden border">
+                  <img src="{{ $img }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                </div>
+              @endforeach
+            @elseif($product->image)
+              <div class="w-24 h-24 bg-gray-100 rounded overflow-hidden border">
+                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+              </div>
             @endif
           </div>
+          @endif
           <div class="flex-1">
-            <input id="image" name="image" type="file" class="block w-full rounded-md border-gray-300" />
-            @error('image') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+            <input id="images" name="images[]" type="file" multiple accept="image/*" class="block w-full rounded-md border-gray-300" />
+            <p class="text-xs text-gray-500 mt-1">Uploading new images will replace existing ones.</p>
+            @error('images') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+            @error('images.*') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
           </div>
         </div>
       </div>

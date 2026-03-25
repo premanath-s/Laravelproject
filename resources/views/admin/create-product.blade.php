@@ -48,12 +48,13 @@
 			</div>
 
 			<div>
-				<label for="image" class="block text-sm font-medium text-gray-700">Image URL</label>
+				<label for="images" class="block text-sm font-medium text-gray-700">Product Images</label>
 				<div class="mt-1">
-					<input id="image" name="image" type="file"
+					<input id="images" name="images[]" type="file" multiple accept="image/*"
 						class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 				</div>
-				@error('image') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+				@error('images') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+				@error('images.*') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
 			</div>
 
 			<div>

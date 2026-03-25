@@ -26,8 +26,8 @@
               <td class="px-6 py-4 text-sm font-medium text-gray-900">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 w-12 h-12 bg-gray-100 rounded">
-                    @if($item->product && $item->product->image)
-                      <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}" class="w-12 h-12 object-cover rounded">
+                    @if($item->product && $item->product->image_url)
+                      <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-12 h-12 object-cover rounded">
                     @endif
                   </div>
                   <div class="ml-4">{{ $item->product->name }}</div>

@@ -16,8 +16,8 @@
     @forelse($products as $product)
       <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
         <div class="relative h-48 bg-gray-100 overflow-hidden group">
-          @if($product->image)
-            <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain group-hover:scale-105 transition">
+          @if($product->image_url)
+            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-contain group-hover:scale-105 transition">
           @else
             <div class="flex items-center justify-center h-full text-gray-400">No image</div>
           @endif
@@ -31,12 +31,17 @@
             <div class="text-2xl font-bold text-indigo-600">₹{{ number_format($product->price, 2) }}</div>
           </div>
 
-          <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
-            @csrf
-            <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              Add to Cart
-            </button>
-          </form>
+          <div class="mt-4 grid grid-cols-2 gap-2">
+            <a href="{{ route('products.detail_view', $product->id) }}" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Details
+            </a>
+            <form action="{{ route('cart.add', $product->id) }}" method="POST">
+              @csrf
+              <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Add to Cart
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     @empty

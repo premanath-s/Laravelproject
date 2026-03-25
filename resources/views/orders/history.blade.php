@@ -23,13 +23,21 @@
             <div class="text-lg font-medium text-gray-900">${{ number_format($order->total,2) }}</div>
           </div>
 
+          <!-- Shipping Address Added -->
+          <div class="mt-3">
+            <p class="text-sm font-medium text-gray-700">Shipping Address:</p>
+            <p class="text-sm text-gray-500">
+              {{ $order->address }}, {{ $order->city }}, {{ $order->state }}, {{ $order->zip }}, {{ $order->country }}
+            </p>
+          </div>
+
           <div class="border-t pt-3">
             <ul class="divide-y divide-gray-100">
               @foreach($order->items as $item)
                 <li class="py-3 flex items-center space-x-4">
                   <div class="flex-shrink-0 w-12 h-12 bg-gray-100 rounded overflow-hidden">
-                    @if($item->product && $item->product->image)
-                      <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
+                    @if($item->product && $item->product->image_url)
+                      <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                     @endif
                   </div>
                   <div class="flex-1 min-w-0">

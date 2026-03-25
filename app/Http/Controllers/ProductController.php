@@ -24,6 +24,12 @@ public function index()
     return view('products.index', compact('products'));
 }
 
+public function show($id)
+{
+    $product = Product::findOrFail($id);
+    return view('products.show', compact('product'));
+}
+
 
 public function create()
 {
@@ -38,14 +44,20 @@ public function store(Request $request)
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
         'description' => 'nullable|string',
-        'image' => 'nullable|image|max:2048'
+        'images' => 'nullable|array',
+        'images.*' => 'image|max:2048'
     ]);
 
-    if($request->hasFile('image')){
-        $file = $request->file('image');
-        $filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.time().'.'.$file->getClientOriginalExtension();
-        $file->move(public_path('images'), $filename);
-        $data['image'] = '/images/'.$filename;
+    if($request->hasFile('images')){
+        $imagePaths = [];
+        foreach($request->file('images') as $file){
+            $path = $file->store('products', 'public');
+            $imagePaths[] = '/storage/'.$path;
+        }
+        $data['images'] = $imagePaths;
+        if(count($imagePaths) > 0){
+            $data['image'] = $imagePaths[0];
+        }
     }
 
     if(!auth()->check() || !auth()->user()->is_admin){ abort(403); }
@@ -71,19 +83,33 @@ public function update(Request $request, $id)
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
         'description' => 'nullable|string',
-        'image' => 'nullable|image|max:2048'
+        'images' => 'nullable|array',
+        'images.*' => 'image|max:2048'
     ]);
 
-    if($request->hasFile('image')){
-        // remove old local image if exists
+    if($request->hasFile('images')){
+        // remove old images
+        if($product->images){
+            foreach($product->images as $img){
+                $old = public_path(ltrim($img, '/'));
+                if(file_exists($old)) @unlink($old);
+            }
+        }
+        // remove old local single image if it wasn't part of images array
         if($product->image && str_starts_with($product->image, '/images/')){
             $old = public_path(ltrim($product->image, '/'));
             if(file_exists($old)) @unlink($old);
         }
-        $file = $request->file('image');
-        $filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.time().'.'.$file->getClientOriginalExtension();
-        $file->move(public_path('images'), $filename);
-        $data['image'] = '/images/'.$filename;
+        
+        $imagePaths = [];
+        foreach($request->file('images') as $file){
+            $path = $file->store('products', 'public');
+            $imagePaths[] = '/storage/'.$path;
+        }
+        $data['images'] = $imagePaths;
+        if(count($imagePaths) > 0) {
+            $data['image'] = $imagePaths[0];
+        }
     }
 
     $product->update($data);
@@ -95,6 +121,12 @@ public function destroy($id)
 {
     if(!auth()->check() || !auth()->user()->is_admin){ abort(403); }
     $product = Product::findOrFail($id);// Eloquent ORM method to find a product by its ID or fail with a 404 error if not found
+    if($product->images){
+        foreach($product->images as $img){
+            $old = public_path(ltrim($img, '/'));
+            if(file_exists($old)) @unlink($old);
+        }
+    }
     if($product->image && str_starts_with($product->image, '/images/')){
         $old = public_path(ltrim($product->image, '/'));
         if(file_exists($old)) @unlink($old);
