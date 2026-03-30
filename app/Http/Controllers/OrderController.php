@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendOrderEmailJob;
+use App\Jobs\SendOrderShippedJob;
 use App\Models\Order;
 use App\Models\Cart;
 use App\Models\OrderItem;
@@ -59,6 +61,9 @@ class OrderController extends Controller
 
         Cart::where('user_id', Auth::id())->delete();
 
+        // Dispatch order confirmation email job
+        SendOrderEmailJob::dispatch($order);
+
         return redirect()->route('payment.show', $order->id);
     }
 
@@ -66,5 +71,18 @@ class OrderController extends Controller
     {
         $orders = Order::where('user_id', Auth::id())->get();
         return view('orders.history', compact('orders'));
+    }
+
+    public function shipOrder(Request $request, Order $order)
+    {
+        // Update order status to shipped
+        $order->update(['status' => 'shipped']);
+
+        // Dispatch order shipped email job
+        SendOrderShippedJob::dispatch($order);
+
+        return response()->json([
+            'message' => 'Order marked as shipped. Notification email will be sent.',
+        ]);
     }
 }

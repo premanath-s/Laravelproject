@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\SendWelcomeEmailJob;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,6 +26,9 @@ class JwtAuthController extends Controller
             'password' => Hash::make($request->password),
             'is_admin' => false,
         ]);
+
+        // Dispatch welcome email job
+        SendWelcomeEmailJob::dispatch($user);
 
         $customToken = JWTAuth::claims([
             'is_admin' => (bool) $user->is_admin,

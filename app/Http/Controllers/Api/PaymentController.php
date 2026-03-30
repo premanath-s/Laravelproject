@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\SendInvoiceEmailJob;
+use App\Models\Payment;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -74,6 +76,18 @@ class PaymentController extends Controller
             'status' => 'paid',
             'razorpay_payment_id' => $request->razorpay_payment_id,
         ]);
+
+        // Create payment record
+        $payment = Payment::create([
+            'order_id' => $order->id,
+            'amount' => $order->total,
+            'payment_method' => 'razorpay',
+            'transaction_id' => $request->razorpay_payment_id,
+            'status' => 'completed',
+        ]);
+
+        // Dispatch invoice email job
+        SendInvoiceEmailJob::dispatch($order, $payment);
 
         return response()->json([
             'status' => true,

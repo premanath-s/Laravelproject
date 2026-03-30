@@ -83,6 +83,9 @@ Route::middleware('auth')->group(function () {
     // Order history
     Route::get('/orders', [OrderController::class,'history'])->name('orders.history');
 
+    // Ship order (for admin or fulfillment)
+    Route::post('/orders/{order}/ship', [OrderController::class,'shipOrder'])->name('orders.ship');
+
     /*
     |--------------------------------------------------------------------------
     | Admin routes (Replaced by Filament)

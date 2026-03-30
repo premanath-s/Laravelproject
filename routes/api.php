@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/order/place', [OrderController::class, 'placeOrder']);
     Route::get('/orders', [OrderController::class, 'myOrders']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
+    Route::post('/orders/{order}/ship', [OrderController::class, 'shipOrder']);
 
     // Cart
     Route::post('/cart/add', [CartController::class, 'add']);

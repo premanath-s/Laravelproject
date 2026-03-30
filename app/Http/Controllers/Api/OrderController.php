@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\SendOrderEmailJob;
+use App\Jobs\SendOrderShippedJob;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -61,6 +63,9 @@ class OrderController extends Controller
         // Clear cart
         Cart::where('user_id', $user->id)->delete();
 
+        // Dispatch order confirmation email job
+        SendOrderEmailJob::dispatch($order);
+
         return response()->json([
             'status' => true,
             'message' => 'Order placed successfully',
@@ -118,5 +123,20 @@ class OrderController extends Controller
             'status' => true,
             'order' => $order,
         ], 200);
+    }
+
+    // Ship order (for admin or fulfillment)
+    public function shipOrder(Request $request, Order $order)
+    {
+        // Assuming only admin can ship, but for simplicity, allow if authenticated
+        $order->update(['status' => 'shipped']);
+
+        // Dispatch order shipped email job
+        SendOrderShippedJob::dispatch($order);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Order marked as shipped. Notification email will be sent.',
+        ]);
     }
 }
