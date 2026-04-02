@@ -4,7 +4,7 @@
 <div class="flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-12">
     <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Join Bhovi.in</h2>
+            <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Join Prem.in</h2>
             <p class="text-slate-500 mt-2">Start your premium shopping experience today</p>
         </div>
 

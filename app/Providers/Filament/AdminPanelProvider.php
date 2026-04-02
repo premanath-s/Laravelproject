@@ -38,7 +38,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                \App\Filament\Widgets\AdminStatsOverview::class,
+                // Temporarily disabled to prevent timeout
+                // Uncomment after optimizing database queries
+                // \App\Filament\Widgets\AdminStatsOverview::class,
                 AccountWidget::class,
             ])
             ->middleware([

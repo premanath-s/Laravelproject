@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Increase PHP execution time for better performance
+        ini_set('max_execution_time', 300); // 5 minutes
+        ini_set('max_input_time', 300);
+
         // Share live cart count with main layout/navbar
         View::composer('layouts.app', function ($view) {
             $cartCount = 0;
@@ -38,6 +42,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Listen for login/logout events and record activity
+        // Temporarily disabled to debug timeout issue
+        /* 
         Event::listen(Login::class, function (Login $event) {
             try {
                 ActivityLog::create([
@@ -63,5 +69,6 @@ class AppServiceProvider extends ServiceProvider
                 // ignore
             }
         });
+        */
     }
 }

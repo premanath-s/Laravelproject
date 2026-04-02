@@ -3,12 +3,17 @@
 @section('content')
 
 <style>
-    /* ── Carousel Hero ── */
+    /* ── Carousel Hero (Mobile-First) ── */
     .hero-carousel .carousel-item {
-        height: 92vh;
-        min-height: 520px;
+        height: clamp(300px, 60vh, 92vh);
+        min-height: 300px;
         background-size: cover;
         background-position: center;
+    }
+    @media (min-width: 640px) {
+        .hero-carousel .carousel-item {
+            height: clamp(350px, 70vh, 92vh);
+        }
     }
     .hero-carousel .carousel-item::after {
         content: '';
@@ -18,103 +23,173 @@
     }
     .hero-carousel .carousel-caption {
         z-index: 10;
-        bottom: 9%;
-        left: 10%; right: 10%;
+        bottom: 5%;
+        left: 5%;
+        right: 5%;
         text-align: center;
+    }
+    @media (min-width: 768px) {
+        .hero-carousel .carousel-caption {
+            bottom: 9%;
+            left: 10%;
+            right: 10%;
+        }
     }
     .hero-badge {
         display: inline-block;
         border: 1px solid rgba(99,102,241,.55);
         background: rgba(99,102,241,.2);
         color: #a5b4fc;
-        font-size: .72rem;
+        font-size: clamp(0.55rem, 2vw, 0.72rem);
         font-weight: 700;
-        letter-spacing: .14em;
+        letter-spacing: .1em;
         text-transform: uppercase;
-        padding: .3rem 1rem;
+        padding: 0.25rem 0.75rem;
         border-radius: 999px;
-        margin-bottom: 1.1rem;
+        margin-bottom: 0.75rem;
         backdrop-filter: blur(8px);
     }
+    @media (min-width: 640px) {
+        .hero-badge {
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.1rem;
+        }
+    }
     .hero-title {
-        font-size: clamp(2.4rem, 6vw, 5rem);
+        font-size: clamp(1.5rem, 5vw, 5rem);
         font-weight: 900;
         letter-spacing: -.025em;
         line-height: 1.1;
         color: #fff;
-        margin-bottom: .9rem;
+        margin-bottom: 0.5rem;
+    }
+    @media (min-width: 640px) {
+        .hero-title {
+            margin-bottom: 0.9rem;
+        }
     }
     .hero-sub {
-        font-size: 1.1rem;
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
         color: #cbd5e1;
         max-width: 40rem;
-        margin: 0 auto 2rem;
-        line-height: 1.75;
+        margin: 0 auto 1rem;
+        line-height: 1.6;
+        padding: 0 1rem;
+    }
+    @media (min-width: 640px) {
+        .hero-sub {
+            margin: 0 auto 2rem;
+            line-height: 1.75;
+            padding: 0;
+        }
     }
     .hero-btn {
         display: inline-block;
-        padding: .9rem 2.25rem;
-        border-radius: .75rem;
+        padding: 0.6rem 1.25rem;
+        border-radius: 0.5rem;
         font-weight: 700;
-        font-size: .97rem;
+        font-size: clamp(0.8rem, 2vw, 0.97rem);
         text-decoration: none;
         transition: background .2s, transform .1s;
+    }
+    @media (min-width: 640px) {
+        .hero-btn {
+            padding: 0.9rem 2.25rem;
+            border-radius: 0.75rem;
+        }
     }
     .hero-btn-primary {
         background: #4f46e5;
         color: #fff !important;
         box-shadow: 0 10px 30px rgba(79,70,229,.4);
     }
-    .hero-btn-primary:hover { background: #4338ca; transform: translateY(-2px); }
-    .carousel-indicators [data-bs-target] {
-        width: 36px; height: 4px; border-radius: 2px;
-        background: rgba(255,255,255,.4); border: none;
+    .hero-btn-primary:hover, .hero-btn-primary:active { background: #4338ca; transform: translateY(-2px); }
+    .carousel-indicators {
+        bottom: 1rem !important;
     }
-    .carousel-indicators .active { background: #818cf8; width: 52px; }
+    .carousel-indicators [data-bs-target] {
+        width: clamp(24px, 8vw, 36px);
+        height: 3px;
+        border-radius: 2px;
+        background: rgba(255,255,255,.4);
+        border: none;
+    }
+    .carousel-indicators .active {
+        background: #818cf8;
+        width: clamp(30px, 10vw, 52px);
+    }
+    .carousel-control-prev, .carousel-control-next {
+        width: clamp(2.5rem, 10vw, 3rem) !important;
+    }
 
-    /* ── Quick-Select Dropdown ── */
+    /* ── Quick-Select Dropdown (Mobile-Friendly) ── */
     .btn-quick-select {
         background: rgba(255,255,255,.13) !important;
         backdrop-filter: blur(12px);
         border: 1.5px solid rgba(255,255,255,.3) !important;
         color: #fff !important;
-        padding: .9rem 2rem !important;
-        border-radius: .75rem !important;
+        padding: 0.6rem 1rem !important;
+        border-radius: 0.5rem !important;
         font-weight: 700 !important;
-        font-size: .97rem !important;
+        font-size: clamp(0.8rem, 2vw, 0.97rem) !important;
+    }
+    @media (min-width: 640px) {
+        .btn-quick-select {
+            padding: 0.9rem 2rem !important;
+            border-radius: 0.75rem !important;
+        }
     }
     .btn-quick-select:hover, .btn-quick-select:focus { background: rgba(255,255,255,.23) !important; }
     .dropdown-menu-hero {
         background: #1e293b !important;
         border: 1px solid #334155 !important;
-        border-radius: .85rem !important;
+        border-radius: 0.85rem !important;
         box-shadow: 0 24px 48px rgba(0,0,0,.4) !important;
-        min-width: 220px;
-        padding: .4rem;
+        min-width: 200px;
+        padding: 0.4rem;
+    }
+    @media (min-width: 640px) {
+        .dropdown-menu-hero {
+            min-width: 220px;
+        }
     }
     .dropdown-menu-hero .dropdown-item {
-        color: #cbd5e1; padding: .65rem 1rem;
-        font-size: .92rem; border-radius: .55rem;
+        color: #cbd5e1;
+        padding: clamp(0.5rem, 2vw, 0.65rem) clamp(0.75rem, 3vw, 1rem);
+        font-size: clamp(0.8rem, 2vw, 0.92rem);
+        border-radius: 0.55rem;
     }
     .dropdown-menu-hero .dropdown-item:hover { background: #334155; color: #fff; }
     .dropdown-menu-hero .dropdown-item.hl { color: #a5b4fc; font-weight: 700; }
-    .dropdown-divider { border-color: #334155 !important; margin: .3rem .5rem; }
+    .dropdown-divider { border-color: #334155 !important; margin: 0.3rem 0.5rem; }
 
-    /* ── Marquee ── */
+    /* ── Marquee (Scrollable on Mobile) ── */
     .marquee-wrap {
-        overflow: hidden;
+        overflow-x: auto;
         display: flex;
-        gap: 1.25rem;
-        padding: 1.1rem 0;
+        gap: clamp(0.75rem, 2vw, 1.25rem);
+        padding: clamp(0.75rem, 2vw, 1.1rem) clamp(1rem, 3vw, 1.5rem);
         background: #fff;
         border-bottom: 1.5px solid #e2e8f0;
+        -webkit-overflow-scrolling: touch;
+    }
+    @media (min-width: 768px) {
+        .marquee-wrap {
+            overflow: hidden;
+            gap: 1.25rem;
+            padding: 1.1rem;
+        }
     }
     .marquee-track {
         flex-shrink: 0;
         display: flex;
-        gap: 1.25rem;
+        gap: clamp(0.75rem, 2vw, 1.25rem);
         min-width: 100%;
-        animation: mscroll 28s linear infinite;
+    }
+    @media (min-width: 768px) {
+        .marquee-track {
+            animation: mscroll 28s linear infinite;
+        }
     }
     .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
     @keyframes mscroll {
@@ -122,14 +197,21 @@
         to   { transform: translateX(calc(-100% - 1.25rem)); }
     }
     .mpill {
-        display: flex; align-items: center; gap: .55rem;
-        background: #f1f5f9; border: 1.5px solid #e0e7ff;
-        padding: .55rem 1.3rem; border-radius: 999px;
-        font-weight: 600; font-size: .88rem; color: #4338ca;
-        white-space: nowrap; text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: clamp(0.4rem, 1vw, 0.55rem);
+        background: #f1f5f9;
+        border: 1.5px solid #e0e7ff;
+        padding: clamp(0.4rem, 1.5vw, 0.55rem) clamp(0.9rem, 2.5vw, 1.3rem);
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: clamp(0.75rem, 2vw, 0.88rem);
+        color: #4338ca;
+        white-space: nowrap;
+        text-decoration: none;
         transition: background .2s, border-color .2s, color .2s, transform .15s;
     }
-    .mpill:hover { background: #4f46e5; color: #fff; border-color: #4f46e5; transform: scale(1.06); }
+    .mpill:hover, .mpill:active { background: #4f46e5; color: #fff; border-color: #4f46e5; transform: scale(1.06); }
 </style>
 
 {{-- ═══ BOOTSTRAP CAROUSEL HERO ═══ --}}
@@ -270,38 +352,38 @@
 </div>
 
 {{-- ═══ FEATURED CATEGORIES GRID ═══ --}}
-<div class="max-w-7xl mx-auto px-6 py-24">
-    <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4 text-slate-900">Explore Categories</h2>
-        <div class="w-20 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-24">
+    <div class="text-center mb-8 sm:mb-12 lg:mb-16">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-slate-900">Explore Categories</h2>
+        <div class="w-16 sm:w-20 h-1 sm:h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
 
         <a href="/products?category=sarees" class="text-decoration-none">
-            <div class="group relative bg-white shadow-sm border border-slate-100 rounded-3xl p-8 text-center hover:shadow-2xl transition duration-500 overflow-hidden">
-                <div class="text-5xl mb-4">&#129403;</div>
-                <h3 class="text-2xl font-bold mb-4 text-slate-900 group-hover:text-indigo-600 transition">Sarees</h3>
-                <p class="text-slate-500 mb-6 leading-relaxed">Traditional textures meet modern drapes. Perfect for every occasion.</p>
-                <span class="inline-block border-2 border-indigo-600 text-indigo-600 px-8 py-2.5 rounded-xl font-bold group-hover:bg-indigo-600 group-hover:text-white transition duration-300">Browse</span>
+            <div class="group relative bg-white shadow-sm border border-slate-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-center hover:shadow-2xl transition duration-500 overflow-hidden">
+                <div class="text-3xl sm:text-4xl lg:text-5xl mb-3 sm:mb-4">&#129403;</div>
+                <h3 class="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-4 text-slate-900 group-hover:text-indigo-600 transition">Sarees</h3>
+                <p class="text-xs sm:text-sm lg:text-base text-slate-500 mb-4 sm:mb-6 leading-relaxed">Traditional textures meet modern drapes. Perfect for every occasion.</p>
+                <span class="inline-block border-2 border-indigo-600 text-indigo-600 px-4 sm:px-6 lg:px-8 py-1.5 sm:py-2 lg:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base group-hover:bg-indigo-600 group-hover:text-white transition duration-300">Browse</span>
             </div>
         </a>
 
         <a href="/products?category=kurtis" class="text-decoration-none">
-            <div class="group relative bg-white shadow-sm border border-slate-100 rounded-3xl p-8 text-center hover:shadow-2xl transition duration-500 overflow-hidden">
-                <div class="text-5xl mb-4">&#128087;</div>
-                <h3 class="text-2xl font-bold mb-4 text-slate-900 group-hover:text-indigo-600 transition">Kurtis</h3>
-                <p class="text-slate-500 mb-6 leading-relaxed">Comfort and style woven together for your everyday grace.</p>
-                <span class="inline-block border-2 border-indigo-600 text-indigo-600 px-8 py-2.5 rounded-xl font-bold group-hover:bg-indigo-600 group-hover:text-white transition duration-300">Browse</span>
+            <div class="group relative bg-white shadow-sm border border-slate-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-center hover:shadow-2xl transition duration-500 overflow-hidden">
+                <div class="text-3xl sm:text-4xl lg:text-5xl mb-3 sm:mb-4">&#128087;</div>
+                <h3 class="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-4 text-slate-900 group-hover:text-indigo-600 transition">Kurtis</h3>
+                <p class="text-xs sm:text-sm lg:text-base text-slate-500 mb-4 sm:mb-6 leading-relaxed">Comfort and style woven together for your everyday grace.</p>
+                <span class="inline-block border-2 border-indigo-600 text-indigo-600 px-4 sm:px-6 lg:px-8 py-1.5 sm:py-2 lg:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base group-hover:bg-indigo-600 group-hover:text-white transition duration-300">Browse</span>
             </div>
         </a>
 
         <a href="/products?category=dresses" class="text-decoration-none">
-            <div class="group relative bg-white shadow-sm border border-slate-100 rounded-3xl p-8 text-center hover:shadow-2xl transition duration-500 overflow-hidden">
-                <div class="text-5xl mb-4">&#128085;</div>
-                <h3 class="text-2xl font-bold mb-4 text-slate-900 group-hover:text-indigo-600 transition">Western Wear</h3>
-                <p class="text-slate-500 mb-6 leading-relaxed">Contemporary western silhouettes designed for standout moments.</p>
-                <span class="inline-block border-2 border-indigo-600 text-indigo-600 px-8 py-2.5 rounded-xl font-bold group-hover:bg-indigo-600 group-hover:text-white transition duration-300">Browse</span>
+            <div class="group relative bg-white shadow-sm border border-slate-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-center hover:shadow-2xl transition duration-500 overflow-hidden">
+                <div class="text-3xl sm:text-4xl lg:text-5xl mb-3 sm:mb-4">&#128085;</div>
+                <h3 class="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-4 text-slate-900 group-hover:text-indigo-600 transition">Western Wear</h3>
+                <p class="text-xs sm:text-sm lg:text-base text-slate-500 mb-4 sm:mb-6 leading-relaxed">Contemporary western silhouettes designed for standout moments.</p>
+                <span class="inline-block border-2 border-indigo-600 text-indigo-600 px-4 sm:px-6 lg:px-8 py-1.5 sm:py-2 lg:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base group-hover:bg-indigo-600 group-hover:text-white transition duration-300">Browse</span>
             </div>
         </a>
 
@@ -309,15 +391,15 @@
 </div>
 
 {{-- ═══ PROMO BANNER ═══ --}}
-<div class="max-w-7xl mx-auto px-6 pb-24">
-    <div class="bg-indigo-600 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/20 rounded-full -ml-32 -mb-32 blur-3xl"></div>
-        <h2 class="relative text-3xl md:text-5xl font-bold text-white mb-6">Seasonal Celebration &ndash; Up to 40% OFF</h2>
-        <p class="relative text-indigo-100 text-lg mb-10 max-w-xl mx-auto">
-            Limited time offer. Join bhovi.in today and get exclusive access to our newest drops.
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-20 lg:pb-24">
+    <div class="bg-indigo-600 rounded-2xl sm:rounded-3xl lg:rounded-[3rem] p-6 sm:p-12 lg:p-20 text-center relative overflow-hidden shadow-2xl">
+        <div class="absolute top-0 right-0 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-24 lg:-mr-32 -mt-16 sm:-mt-24 lg:-mt-32 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-indigo-400/20 rounded-full -ml-16 sm:-ml-24 lg:-ml-32 -mb-16 sm:-mb-24 lg:-mb-32 blur-3xl"></div>
+        <h2 class="relative text-xl sm:text-3xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 lg:mb-6">Seasonal Celebration &ndash; Up to 40% OFF</h2>
+        <p class="relative text-sm sm:text-base lg:text-lg text-indigo-100 mb-6 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
+            Limited time offer. Join prem.in today and get exclusive access to our newest drops.
         </p>
-        <a href="/products" class="relative inline-block bg-white text-indigo-600 px-12 py-4 rounded-2xl font-bold hover:bg-slate-100 transition shadow-xl active:scale-95">
+        <a href="/products" class="relative inline-block bg-white text-indigo-600 px-6 sm:px-10 lg:px-12 py-2.5 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl lg:rounded-2xl font-bold text-sm sm:text-base lg:text-lg hover:bg-slate-100 transition shadow-xl active:scale-95 touch-action-manipulation">
             Claim Your Discount
         </a>
     </div>

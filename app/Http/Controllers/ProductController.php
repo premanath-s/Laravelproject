@@ -26,7 +26,7 @@ public function index()
 
 public function show($id)
 {
-    $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);//elaquent ORM method to find a product by its ID or fail with a 404 error if not found
     return view('products.show', compact('product'));
 }
 

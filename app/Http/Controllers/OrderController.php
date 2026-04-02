@@ -15,7 +15,7 @@ class OrderController extends Controller
     // Show checkout form
     public function checkout()
     {
-        $cartItems = Cart::where('user_id', Auth::id())->get();
+        $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
 
         $total = 0;
         foreach($cartItems as $item){
@@ -36,7 +36,7 @@ class OrderController extends Controller
             'country' => 'required|string|max:100',
         ]);
 
-        $cartItems = Cart::where('user_id', Auth::id())->get();
+        $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
         $total = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
 
         $order = Order::create([

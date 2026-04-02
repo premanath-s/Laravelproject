@@ -31,7 +31,7 @@ class CartController extends Controller
 
     public function index()
     {
-        $cartItems = Cart::where('user_id', Auth::id())->get();
+        $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
 
         return view('cart.index', compact('cartItems'));
     }

@@ -23,10 +23,15 @@ Route::get('/', function () {
 
 // Dashboard (login required)
 Route::get('/dashboard', function () {
-
-    $orderCount = \App\Models\Order::where('user_id', auth()->id())->count();
-    $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
-    $products = \App\Models\Product::latest()->take(6)->get();
+    try {
+        $orderCount = \App\Models\Order::where('user_id', auth()->id())->limit(1000)->count();
+        $cartCount = \App\Models\Cart::where('user_id', auth()->id())->limit(1000)->count();
+        $products = \App\Models\Product::latest()->take(6)->get();
+    } catch (\Exception $e) {
+        $orderCount = 0;
+        $cartCount = 0;
+        $products = [];
+    }
 
     return view('dashboard', compact('orderCount','cartCount', 'products'));
 
